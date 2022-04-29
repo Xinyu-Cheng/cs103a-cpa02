@@ -1,0 +1,81 @@
+<!-- <ul>
+    <% for (course of courses){%>
+        <li> 
+            <a href="/schedule/remove/<%= course._id %>">X</a>
+            <%= course['subject'] %>
+            <%= course.coursenum %>
+            <%= course.name %>
+            <%= course.term %>
+            
+        </li>
+    <% } %>
+</ul> -->
+
+
+<% if (courses==[]){%>
+    No courses in your schedule!
+
+<% } else if (courses==null) { %>
+
+    No courses in your schedule!
+
+<% } else if (courses.length>0) { %>
+
+    <h2 class="mt-5">Schedule</h2>
+
+    <div class="d-flex flex-wrap text-center overflow-scroll">
+     <% for (course of courses) {
+        const inst = course['instructor'];
+        const term = course.term;
+        const sem = term%10;
+        const semester=['none','Spring 2021','Summer 2021','Fall 2020']
+        %>
+         <div class="flex-column p-3 m-3 border border-primary bg-light">
+             <br>
+             <a href="/courses/show/<%=course._id %>">
+                
+                <strong><%= course.name %></strong>
+             </a>
+             <div>
+                <%=  course['subject'] %>
+                <%=  course['coursenum'] %>  
+                (Section <%=  course['section'] %>) 
+             </div>
+             <div>
+                <strong>Enrolled:</strong><%=course.enrolled %> <strong>Limit:</strong><%=course.limit || 999 %> <strong>Waitlist:</strong><%= course.waiting %>
+             </div>
+             <!-- by Katherine Cheng -->
+             <div>
+                <strong>Course status: </strong> <%= course.status_text %>
+              </div>
+              <!-- end -->
+             <div>
+               <strong>Semester: </strong> <%= semester[term%10] %>
+             </div>
+             <div>
+                <strong>Time:</strong>
+                <% for (t of course.strTimes ){%> 
+                    <%= t %> <br> 
+                <%} %>
+             </div>
+             <div>
+                <strong>Instructor:</strong>
+                <%= inst[0]+" "+inst[1]%> <br> 
+                <strong>Email:</strong>
+                <%= " ("+inst[2]+")" %>
+             </div>
+             <div>
+             <a href="/schedule/remove/<%= course._id %>">Delete</a>
+            </div>
+             <hr>
+        </div>
+         <% }%>
+     </div>
+<% } %>
+
+
+<!--
+    <pre>
+        <%= JSON.stringify(courses,null,5) %>
+    </pre>
+-->
