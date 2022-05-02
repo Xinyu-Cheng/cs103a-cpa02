@@ -35,9 +35,7 @@ const colleges = require('./public/data/colleges.json');
 // *********************************************************** //
 
 const mongoose = require('mongoose');
-//const mongodb_URI = 'mongodb://localhost:27017/cs103a_todo';
-// const mongodb_URI = 'mongodb+srv://cs_sj:BrandeisSpr22@cluster0.kgugl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-const mongodb_URI = 'mongodb+srv://KatherineCheng:bfvg6281NENClktW@cluster0.wpvzd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const mongodb_URI = process.env.mongodb_URI
 
 mongoose.connect(mongodb_URI, {
   useNewUrlParser: true,
@@ -614,7 +612,8 @@ app.use(function (err, req, res, next) {
 //  Starting up the server!
 // *********************************************************** //
 //Here we set the port to use between 1024 and 65535  (2^16-1)
-const port = '5500';
+const port = process.env.PORT || "5000";
+console.log('connecting on port '+port)
 app.set('port', port);
 
 // and now we startup the server listening on that port
