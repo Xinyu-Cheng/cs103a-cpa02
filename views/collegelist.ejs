@@ -21,7 +21,7 @@ Here we want a ul list with the name, state, city, unitID and web address.
          %>
       <tr class="mb-2"> 
         <td>
-            <a href="/colleges/show/<%=college._id %>">
+            <a href="/addCollege/<%= college['_id'] %>">
             <%= college.name %>
             </a>
         </td>

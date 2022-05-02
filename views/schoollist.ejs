@@ -1,0 +1,44 @@
+
+<% if (colleges==[]){%>
+    No colleges in your list!
+
+<% } else if (colleges==null) { %>
+
+    No colleges in your list!
+
+<% } else if (colleges.length>0) { %>
+
+    <h2 class="mt-5">School list</h2>
+
+    <div class="d-flex flex-wrap text-center overflow-scroll">
+     <% for (college of colleges) {
+        const name = college.name;
+        const unitID = college.unitID;
+        const state = college.state;
+        const city= college.city
+        const webAddress = college.websiteAddress
+        %>
+         <div class="flex-column p-3 m-3 border border-primary bg-light">
+             <br>
+             
+             <strong><%= college.name %></strong>
+             <div>
+                <%= college.unitID %>
+             </div>
+             <div>
+                <%= college.state %>
+             </div>
+             <div>
+                <%= college.city %>
+             </div>
+             <div>
+                <%= college.websiteAddress %>
+             </div>
+             <div>
+             <a href="/schoolList/remove/<%= college._id %>">Delete</a>
+            </div>
+             <hr>
+        </div>
+         <% }%>
+     </div>
+<% } %>

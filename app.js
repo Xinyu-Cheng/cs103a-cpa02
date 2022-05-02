@@ -21,6 +21,7 @@ const axios = require('axios');
 const ToDoItem = require('./models/ToDoItem');
 const Course = require('./models/Course');
 const Schedule = require('./models/Schedule');
+const SchoolList = require('./models/SchoolList');
 const College = require('./models/College');
 
 
@@ -503,7 +504,7 @@ app.get(
     const college = await College.findOne({_id: collegeId});
     res.locals.college = college;
     res.json(college)
-    // res.render('course');
+    // res.render('college');
   }
 );
 
@@ -537,60 +538,57 @@ app.get(
 //   }
 // );
 
-// app.use(isLoggedIn);
+app.use(isLoggedIn);
 
-// app.get(
-//   '/addCourse/:courseId',
-//   // add a course to the user's schedule
-//   async (req, res, next) => {
-//     try {
-//       const courseId = req.params.courseId;
-//       const userId = res.locals.user._id;
-//       // check to make sure it's not already loaded
-//       const lookup = await Schedule.find({courseId, userId});
-//       if (lookup.length == 0) {
-//         const schedule = new Schedule({courseId, userId});
-//         await schedule.save();
-//       }
-//       res.redirect('/schedule/show');
-//     } catch (e) {
-//       next(e);
-//     }
-//   }
-// );
+app.get(
+  '/addCollege/:collegeId',
+  async (req, res, next) => {
+    try {
+      const collegeId = req.params.collegeId;
+      const userId = res.locals.user._id;
+      // check to make sure it's not already loaded
+      const lookup = await SchoolList.find({collegeId, userId});
+      if (lookup.length == 0) {
+        const schoolList = new SchoolList({collegeId, userId});
+        await schoolList.save();
+      }
+      res.redirect('/schoolList/show');
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
-// app.get(
-//   '/schedule/show',
-//   // show the current user's schedule
-//   async (req, res, next) => {
-//     try {
-//       const userId = res.locals.user._id;
-//       const courseIds = (await Schedule.find({userId}))
-//         .sort(x => x.term)
-//         .map(x => x.courseId);
-//       res.locals.courses = await Course.find({_id: {$in: courseIds}});
-//       res.render('schedule');
-//     } catch (e) {
-//       next(e);
-//     }
-//   }
-// );
+app.get(
+  '/schoolList/show',
+  async (req, res, next) => {
+    try {
+      const userId = res.locals.user._id;
+      const collegeIds = (await SchoolList.find({userId}))
+        .map(x => x.collegeId);
+      res.locals.colleges = await College.find({_id: {$in: collegeIds}});
+      res.render('schoollist');
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
-// app.get(
-//   '/schedule/remove/:courseId',
-//   // remove a course from the user's schedule
-//   async (req, res, next) => {
-//     try {
-//       await Schedule.remove({
-//         userId: res.locals.user._id,
-//         courseId: req.params.courseId,
-//       });
-//       res.redirect('/schedule/show');
-//     } catch (e) {
-//       next(e);
-//     }
-//   }
-// );
+app.get(
+  '/schoolList/remove/:collegeId',
+  async (req, res, next) => {
+    console.log(req.params.collegeId)
+    try {
+      await SchoolList.remove({
+        userId: res.locals.user._id,
+        collegeId: req.params.collegeId,
+      });
+      res.redirect('/schoolList/show');
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
 // here we catch 404 errors and forward to error handler
 app.use(function (req, res, next) {
