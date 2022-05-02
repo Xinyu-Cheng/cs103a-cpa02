@@ -1,0 +1,44 @@
+<h1>The colleges are</h1>
+Here we want a ul list with the name, state, city, unitID and web address.
+<hr>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>UnitID</th>
+            <th>State</th>
+            <th>City</th>
+            <th>Web Address</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+    <% for (college of colleges) {
+        const name = college.name;
+        const unitID = college.unitID;
+        const state = college.state;
+        const city= college.city
+        const webAddress = college.websiteAddress
+         %>
+      <tr class="mb-2"> 
+        <td>
+            <a href="/colleges/show/<%=college._id %>">
+            <%= college.name %>
+            </a>
+        </td>
+        <td><%= college.unitID %></td>
+
+        <td>
+            <%= college.state %>
+        </td>
+
+        <td>
+            <%=college.city %>
+        </td>
+
+        <td>
+        <%= college.websiteAddress %>
+        </td>
+    </tr>
+    <% } %>
+    </tbody>
+</table>

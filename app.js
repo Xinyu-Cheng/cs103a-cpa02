@@ -21,11 +21,14 @@ const axios = require('axios');
 const ToDoItem = require('./models/ToDoItem');
 const Course = require('./models/Course');
 const Schedule = require('./models/Schedule');
+const College = require('./models/College');
+
 
 // *********************************************************** //
 //  Loading JSON datasets
 // *********************************************************** //
 const courses = require('./public/data/courses20-21.json');
+const colleges = require('./public/data/colleges.json');
 
 // *********************************************************** //
 //  Connecting to the database
@@ -33,7 +36,8 @@ const courses = require('./public/data/courses20-21.json');
 
 const mongoose = require('mongoose');
 //const mongodb_URI = 'mongodb://localhost:27017/cs103a_todo';
-const mongodb_URI = 'mongodb+srv://cs_sj:BrandeisSpr22@cluster0.kgugl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+// const mongodb_URI = 'mongodb+srv://cs_sj:BrandeisSpr22@cluster0.kgugl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const mongodb_URI = 'mongodb+srv://KatherineCheng:bfvg6281NENClktW@cluster0.wpvzd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
 mongoose.connect(mongodb_URI, {
   useNewUrlParser: true,
@@ -221,21 +225,33 @@ function time2str(time) {
 // this route loads in the courses into the Course collection
 // or updates the courses if it is not a new collection
 
+// app.get('/upsertDB', async (req, res, next) => {
+//   //await Course.deleteMany({})
+//   for (course of courses) {
+//     const {subject, coursenum, section, term, times} = course;
+//     const num = getNum(coursenum);
+//     course.num = num;
+//     course.suffix = coursenum.slice(num.length);
+//     course.strTimes = times2str(times);
+//     await Course.findOneAndUpdate({subject, coursenum, section, term}, course, {
+//       upsert: true,
+//     });
+//   }
+//   const num = await Course.find({}).count();
+//   res.send('data uploaded: ' + num);
+// });
+
 app.get('/upsertDB', async (req, res, next) => {
-  //await Course.deleteMany({})
-  for (course of courses) {
-    const {subject, coursenum, section, term, times} = course;
-    const num = getNum(coursenum);
-    course.num = num;
-    course.suffix = coursenum.slice(num.length);
-    course.strTimes = times2str(times);
-    await Course.findOneAndUpdate({subject, coursenum, section, term}, course, {
+  for (college of colleges) {
+    const {unitID, name, state, websiteAddress, city} =  college;
+    await College.findOneAndUpdate({unitID, name, state, websiteAddress, city}, college, {
       upsert: true,
     });
   }
-  const num = await Course.find({}).count();
+  const num = await College.find({}).count();
   res.send('data uploaded: ' + num);
 });
+
 
 app.post(
   '/courses/bySubject',
@@ -346,7 +362,7 @@ app.post(
   }
 );
 
-app.use(isLoggedIn);
+// app.use(isLoggedIn);
 
 app.get(
   '/addCourse/:courseId',
@@ -400,6 +416,183 @@ app.get(
     }
   }
 );
+
+// app.post(
+//   '/courses/bySubject',
+//   // show list of courses in a given subject
+//   async (req, res, next) => {
+//     const {subject} = req.body;
+//     const courses = await Course.find({
+//       subject: subject,
+//       independent_study: false,
+//     }).sort({term: 1, num: 1, section: 1});
+
+//     res.locals.courses = courses;
+//     //res.json(courses)
+//     res.render('courselist');
+//   }
+// );
+
+app.post(
+  '/colleges/byName',
+  // show list of colleges with given keyword in name field
+  async (req, res, next) => {
+    const {name} = req.body;
+    const colleges = await College.find({name : {$regex: `${name}`, $options: 'i'}});
+    res.locals.colleges = colleges;
+    // res.json(colleges)
+    res.render('collegelist');
+  }
+);
+
+
+app.get(
+  '/collegelist/show',
+  // show the current user's schedule
+  async (req, res, next) => {
+    try {
+      // const userId = res.locals.user._id;
+      // const courseIds = (await Schedule.find({userId}))
+      //   .sort(x => x.term)
+      //   .map(x => x.courseId);
+      // res.locals.courses = await Course.find({_id: {$in: courseIds}});
+      // res.render('schedule');
+      res.render('collegelist')
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// // written by Jian He
+// app.post(
+//   '/courses/byAvailability',
+//   // show list of courses in a given subject with no body in the waitlist
+//   async (req, res, next) => {
+//     const {subject} = req.body;
+//     const courses = await Course.find({
+//       subject: subject,
+//       waiting: 0,
+//       independent_study: false,
+//     }).sort({term: 1, num: 1, section: 1});
+
+//     res.locals.courses = courses;
+//     //res.json(courses)
+//     res.render('courselist');
+//   }
+// );
+
+// // written by Katherine Cheng
+// app.post(
+//   '/courses/byCoursenum',
+//   // show list of courses with a given coursenum
+//   async (req, res, next) => {
+//     const {coursenum} = req.body;
+//     const courses = await Course.find({
+//       coursenum: coursenum,
+//     }).sort({term: 1, num: 1, section: 1});
+//     console.log(coursenum)
+//     res.locals.courses = courses;
+//     res.render('courselist');
+//   }
+// );
+
+app.get(
+  '/colleges/show/:collegeId',
+  // show all info about a course given its courseid
+  async (req, res, next) => {
+    const {collegeId} = req.params;
+    const college = await College.findOne({_id: collegeId});
+    res.locals.college = college;
+    res.json(college)
+    // res.render('course');
+  }
+);
+
+// app.get(
+//   '/courses/byInst/:email',
+//   // show a list of all courses taught by a given faculty
+//   async (req, res, next) => {
+//     const email = req.params.email + '@brandeis.edu';
+//     const courses = await Course.find({
+//       instructor: email,
+//       independent_study: false,
+//     });
+//     //res.json(courses)
+//     res.locals.courses = courses;
+//     res.render('courselist');
+//   }
+// );
+
+// app.post(
+//   '/courses/byInst',
+//   // show courses taught by a faculty send from a form
+//   async (req, res, next) => {
+//     const email = req.body.email + '@brandeis.edu';
+//     const courses = await Course.find({
+//       instructor: email,
+//       independent_study: false,
+//     }).sort({term: 1, num: 1, section: 1});
+//     //res.json(courses)
+//     res.locals.courses = courses;
+//     res.render('courselist');
+//   }
+// );
+
+// app.use(isLoggedIn);
+
+// app.get(
+//   '/addCourse/:courseId',
+//   // add a course to the user's schedule
+//   async (req, res, next) => {
+//     try {
+//       const courseId = req.params.courseId;
+//       const userId = res.locals.user._id;
+//       // check to make sure it's not already loaded
+//       const lookup = await Schedule.find({courseId, userId});
+//       if (lookup.length == 0) {
+//         const schedule = new Schedule({courseId, userId});
+//         await schedule.save();
+//       }
+//       res.redirect('/schedule/show');
+//     } catch (e) {
+//       next(e);
+//     }
+//   }
+// );
+
+// app.get(
+//   '/schedule/show',
+//   // show the current user's schedule
+//   async (req, res, next) => {
+//     try {
+//       const userId = res.locals.user._id;
+//       const courseIds = (await Schedule.find({userId}))
+//         .sort(x => x.term)
+//         .map(x => x.courseId);
+//       res.locals.courses = await Course.find({_id: {$in: courseIds}});
+//       res.render('schedule');
+//     } catch (e) {
+//       next(e);
+//     }
+//   }
+// );
+
+// app.get(
+//   '/schedule/remove/:courseId',
+//   // remove a course from the user's schedule
+//   async (req, res, next) => {
+//     try {
+//       await Schedule.remove({
+//         userId: res.locals.user._id,
+//         courseId: req.params.courseId,
+//       });
+//       res.redirect('/schedule/show');
+//     } catch (e) {
+//       next(e);
+//     }
+//   }
+// );
 
 // here we catch 404 errors and forward to error handler
 app.use(function (req, res, next) {

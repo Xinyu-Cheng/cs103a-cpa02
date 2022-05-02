@@ -13,8 +13,15 @@
         the courses and create your schedule.
     </p>
     
-    <% if (true || loggedIn) {%>  
-        <form method="post" action="/courses/bySubject">
+    <% if (true || loggedIn) {%>
+        <form method="post" action="/colleges/byName">
+            Show Colleges by Name: 
+              <input type="text" name="name" 
+                     placeholder="e.g. Cornell University">
+            <input type="submit">
+        </form>
+        <br>  
+        <!-- <form method="post" action="/courses/bySubject">
             Show Courses by Subject: 
               <input type="text" name="subject" 
                      placeholder="e.g. COSI">
@@ -28,7 +35,6 @@
             <input type="submit">
         </form>
         <br>
-        <!--written by WeiDong Wang-->
         <form method="post" action="/courses/byWord">
             Show Courses by Keyword in name: 
             <input type="text" name="word" 
@@ -36,7 +42,6 @@
             <input type="submit">
         </form>
         
-        <!-- written by Jian He -->
          <br>
         <form method="post" action="/courses/byAvailability">
             Show Courses which have nobody waiting by Subject: 
@@ -45,7 +50,6 @@
             <input type="submit">
         </form>
 
-        <!-- written by Katherine Cheng -->
         <br>
         <form method="post" action="/courses/byCoursenum">
             Show Courses by coursenum: 
@@ -53,9 +57,9 @@
                      placeholder="e.g. 103A">
             <input type="submit">
         </form>
-        <br>
+        <br> -->
 
-        <a href="/schedule/show">Show Schedule</a>
+        <a href="/collegelist/show">Show College List</a>
     <% } %>
 
 
