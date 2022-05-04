@@ -11,6 +11,8 @@ You will be lead to a login page.
 View your list after login. 
 <kbd><img src="https://github.com/Xinyu-Cheng/cs103a-cpa02/blob/main/media/screenshot/schoolList.png"></kbd>
 
+Click the link to see the demonstration. 
+https://drive.google.com/file/d/1NpLp0xqpXBWZRyMOr47FO7J7Hb3-133W/view?usp=sharing
 
 ## Install
 
