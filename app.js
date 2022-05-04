@@ -18,9 +18,6 @@ const axios = require('axios');
 // *********************************************************** //
 //  Loading models
 // *********************************************************** //
-const ToDoItem = require('./models/ToDoItem');
-const Course = require('./models/Course');
-const Schedule = require('./models/Schedule');
 const SchoolList = require('./models/SchoolList');
 const College = require('./models/College');
 
@@ -28,7 +25,6 @@ const College = require('./models/College');
 // *********************************************************** //
 //  Loading JSON datasets
 // *********************************************************** //
-const courses = require('./public/data/courses20-21.json');
 const colleges = require('./public/data/colleges.json');
 
 // *********************************************************** //
@@ -139,68 +135,6 @@ app.post(
   }
 );
 
-// // written by Jian He
-// app.post(
-//   '/courses/byAvailability',
-//   // show list of courses in a given subject with no body in the waitlist
-//   async (req, res, next) => {
-//     const {subject} = req.body;
-//     const courses = await Course.find({
-//       subject: subject,
-//       waiting: 0,
-//       independent_study: false,
-//     }).sort({term: 1, num: 1, section: 1});
-
-//     res.locals.courses = courses;
-//     //res.json(courses)
-//     res.render('courselist');
-//   }
-// );
-
-// // written by Katherine Cheng
-// app.post(
-//   '/courses/byCoursenum',
-//   // show list of courses with a given coursenum
-//   async (req, res, next) => {
-//     const {coursenum} = req.body;
-//     const courses = await Course.find({
-//       coursenum: coursenum,
-//     }).sort({term: 1, num: 1, section: 1});
-//     console.log(coursenum)
-//     res.locals.courses = courses;
-//     res.render('courselist');
-//   }
-// );
-
-// app.get(
-//   '/courses/byInst/:email',
-//   // show a list of all courses taught by a given faculty
-//   async (req, res, next) => {
-//     const email = req.params.email + '@brandeis.edu';
-//     const courses = await Course.find({
-//       instructor: email,
-//       independent_study: false,
-//     });
-//     //res.json(courses)
-//     res.locals.courses = courses;
-//     res.render('courselist');
-//   }
-// );
-
-// app.post(
-//   '/courses/byInst',
-//   // show courses taught by a faculty send from a form
-//   async (req, res, next) => {
-//     const email = req.body.email + '@brandeis.edu';
-//     const courses = await Course.find({
-//       instructor: email,
-//       independent_study: false,
-//     }).sort({term: 1, num: 1, section: 1});
-//     //res.json(courses)
-//     res.locals.courses = courses;
-//     res.render('courselist');
-//   }
-// );
 
 app.use(isLoggedIn);
 
